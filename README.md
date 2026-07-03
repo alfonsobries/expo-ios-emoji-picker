@@ -6,6 +6,13 @@
 
 Native iOS emoji picker for Expo and React Native. Opens the **system emoji keyboard** — the emoji-only panel Apple's Reminders uses, with Apple's own search and skin-tone selector — from any trigger, and resolves with the picked emoji.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/picker-dark.png">
+    <img src="docs/picker-light.png" alt="The system emoji keyboard presented over an app, with a search bar, dismiss button, and the emoji grid" width="400">
+  </picture>
+</p>
+
 - 🍎 **Real native keyboard** — Apple's emoji panel, not a JS re-implementation. Search, skin tones, and new emoji land with each iOS release, for free.
 - 🌎 **Localized by default** — the keyboard, its search, and the dismiss button follow the device language automatically.
 - 🎯 **Headless** — trigger it from any button, tile, or gesture; there's no UI to style.
