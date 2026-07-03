@@ -1,9 +1,18 @@
-import { NativeModule, requireNativeModule } from 'expo';
+import { NativeModule, requireOptionalNativeModule } from 'expo';
 
-import { ExpoIosEmojiPickerModuleEvents } from './ExpoIosEmojiPicker.types';
+import { EmojiPickerOptions, ExpoIosEmojiPickerModuleEvents } from './ExpoIosEmojiPicker.types';
 
 declare class ExpoIosEmojiPickerModule extends NativeModule<ExpoIosEmojiPickerModuleEvents> {
-  setValueAsync(value: string): Promise<void>;
+  /**
+   * Opens the native iOS emoji keyboard. Single mode resolves with the picked
+   * emoji (null if dismissed); with `multiple: true` it resolves with every
+   * picked emoji once the keyboard is dismissed.
+   */
+  presentAsync(
+    options: EmojiPickerOptions & { multiple?: boolean }
+  ): Promise<string | string[] | null>;
 }
 
-export default requireNativeModule<ExpoIosEmojiPickerModule>('ExpoIosEmojiPicker');
+// Null on platforms without the native implementation (Android); the public
+// helpers degrade gracefully instead of throwing at import time.
+export default requireOptionalNativeModule<ExpoIosEmojiPickerModule>('ExpoIosEmojiPicker');

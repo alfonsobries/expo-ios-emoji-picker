@@ -1,10 +1,13 @@
 import { registerWebModule, NativeModule } from 'expo';
 
-import { ExpoIosEmojiPickerModuleEvents } from './ExpoIosEmojiPicker.types';
+import { EmojiPickerOptions, ExpoIosEmojiPickerModuleEvents } from './ExpoIosEmojiPicker.types';
 
+// The native emoji keyboard is iOS-only; on web the picker resolves empty.
 class ExpoIosEmojiPickerModule extends NativeModule<ExpoIosEmojiPickerModuleEvents> {
-  async setValueAsync(value: string): Promise<void> {
-    this.emit('onChange', { value });
+  async presentAsync(
+    options: EmojiPickerOptions & { multiple?: boolean }
+  ): Promise<string | string[] | null> {
+    return options.multiple ? [] : null;
   }
 }
 

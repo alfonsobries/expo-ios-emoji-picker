@@ -1,23 +1,53 @@
-import ExpoIosEmojiPicker from 'expo-ios-emoji-picker';
-import { useEvent } from 'expo';
+import { pickEmoji, pickEmojis } from 'expo-ios-emoji-picker';
+import { useState } from 'react';
 import { Button, SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 export default function App() {
-  const onChangePayload = useEvent(ExpoIosEmojiPicker, 'onChange');
+  const [picked, setPicked] = useState<string | null>(null);
+  const [reactions, setReactions] = useState<string[]>([]);
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container}>
-        <Text style={styles.header}>Module API Example</Text>
-        <Group name="Async functions">
+        <Text style={styles.header}>expo-ios-emoji-picker</Text>
+
+        <Group name="Single pick">
           <Button
-            title="Set value"
+            title="Pick an emoji"
             onPress={async () => {
-              await ExpoIosEmojiPicker.setValueAsync('Hello from JS!');
+              const emoji = await pickEmoji();
+              if (emoji) {
+                setPicked(emoji);
+              }
             }}
           />
+          <Text style={styles.emoji}>{picked ?? '·'}</Text>
         </Group>
-        <Group name="Events">
-          <Text>{onChangePayload?.value}</Text>
+
+        <Group name="Keyboard mode (multiple)">
+          <Button
+            title="Add reactions"
+            onPress={() =>
+              pickEmojis({
+                cancelLabel: 'Done',
+                onPick: (emoji) => setReactions((current) => [...current, emoji]),
+                onDelete: () => setReactions((current) => current.slice(0, -1)),
+              })
+            }
+          />
+          <Text style={styles.emoji}>{reactions.length > 0 ? reactions.join(' ') : '·'}</Text>
+        </Group>
+
+        <Group name="Custom options">
+          <Button
+            title="Stronger backdrop, no tap outside"
+            onPress={async () => {
+              const emoji = await pickEmoji({ backdropOpacity: 0.4, dismissOnTapOutside: false });
+              if (emoji) {
+                setPicked(emoji);
+              }
+            }}
+          />
         </Group>
       </ScrollView>
     </SafeAreaView>
@@ -38,5 +68,5 @@ const styles = {
   groupHeader: { fontSize: 20, marginBottom: 20 },
   group: { margin: 20, backgroundColor: '#fff', borderRadius: 10, padding: 20 },
   container: { flex: 1, backgroundColor: '#eee' },
-  view: { flex: 1, height: 200 },
+  emoji: { fontSize: 40, marginTop: 12, textAlign: 'center' as const },
 };
